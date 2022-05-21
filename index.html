@@ -8,6 +8,7 @@
 		const D_WIDTH = 480;
 		const D_HEIGHT = 320;
 		let player;
+		let counter = 0;
 
 		// 1, Phaser3の設定データ
 		const config = {
@@ -38,12 +39,13 @@
 
 		function preload(){
 			console.log("preload!!");
-			this.load.image("block", "phaser_game\assets\block.png");
-			this.load.image("ground", "phaser_game\assets\ground.png");
-			this.load.image("pillar", "phaser_game\assets\pillar.png");
-			this.load.image("post", "phaser_game\assets\post.png");
-			this.load.image("sky", "phaser_game\assets\sky.png");
-			this.load.image("tanuki", "phaser_game\assets\tanuki.png");
+			this.load.image("block", "block.png");
+			this.load.image("ground", "ground.png");
+			this.load.image("pillar", "pillar.png");
+			this.load.image("post", "post.png");
+			this.load.image("sky", "sky.png");
+			this.load.image("tanuki", "tanuki.png");
+			this.load.image("coin", "coin.png");
 		}
 
 		function create(){
@@ -59,6 +61,7 @@
 			this.physics.add.collider(player, staticGroup);// 衝突処理を設定する
 
 			let coinGroup = this.physics.add.group();// 動く物体をまとめる
+
 			coinGroup.create(190, 0, "coin");// コイン1
 			coinGroup.create(240, 0, "coin");// コイン2
 			coinGroup.create(290, 0, "coin");// コイン3
@@ -66,12 +69,15 @@
 
 			this.physics.add.overlap(player, coinGroup, (p, c)=>{
 				c.destroy();// コインを消す
+				coinGroup.create(Math.random() * 480, 0, "coin");// コインを追加
+				counter++;
 			}, null, this);
 
 		}
 
 		function update(){
 			console.log("update!!");
+
 			let cursors = this.input.keyboard.createCursorKeys();
 			if(cursors.up.isDown){
 				//console.log("Up!!");
@@ -79,13 +85,17 @@
 			}else if(cursors.left.isDown){
 				//console.log("Left");
 				player.setVelocityX(-200);// 左方向の速度を設定
-		}else if(cursors.right.isDown){
+			}else if(cursors.right.isDown){
 				//console.log("Right!!");
 				player.setVelocityX(200);// 右方向の速度を設定
-		}else{
+			}else{
 			player.setVelocityX(0);// 横方向の速度を0
-		}	
-	}
+			}
+			if(counter == 10){
+				alert("ゲームクリア！！");
+				window.close();
+			}	
+		}
 	</script>
 </body>
 </html>
